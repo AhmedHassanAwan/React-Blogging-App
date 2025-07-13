@@ -4,11 +4,7 @@
 import { useEffect, useRef, useState } from "react";
 import {  createUserWithEmailAndPassword } from "firebase/auth";
 import { collection, addDoc } from "firebase/firestore"; 
-// import { FaUser, FaEnvelope, FaLock, FaUpload } from "react-icons/fa";
 import { FaUser, FaEnvelope, FaLock, FaUpload, FaCheck } from "react-icons/fa";
-
-
-
 import { auth , db } from "../Config.js";
 import { useNavigate } from "react-router-dom";
 
@@ -20,9 +16,10 @@ const [password, setpassword] = useState("");
 const [username, setusername] = useState("");
 const [image , setimage] = useState("")
 const [useruid , setuseruid] = useState("")
+const [loading, setLoading] = useState(false);
+
 
 let  nevigate = useNavigate()
-
 let  widgetRef = useRef(null);
 
 
@@ -51,6 +48,7 @@ useEffect(() => {
 function submit(e) {
     e.preventDefault();
     console.log(email, password, username);
+     setLoading(true); 
 
 createUserWithEmailAndPassword(auth, email, password)
 .then(async (userCredential) => {
@@ -66,9 +64,12 @@ try {
     iamge: image
   });
   console.log("Document written with ID: ", docRef.id);
+  alert("sign up sucess fully ")
 } catch (e) {
   console.error("Error adding document: ", e);
+  alert("please correct passwaord ")
 }
+  setLoading(false); 
 
 nevigate('/');
 })
@@ -76,6 +77,7 @@ nevigate('/');
 .catch((error) => {
     const errorMessage = error.message;
     console.log(errorMessage);
+    alert(errorMessage)
     
 
 });
@@ -159,12 +161,16 @@ return (
     </button>
 
     {/* Submit */}
-    <button
-        type="submit"
-        className="w-full py-2 bg-blue-600 hover:bg-blue-500 transition rounded-md text-white font-semibold"
-    >
-        Sign Up
-    </button>
+  <button
+  type="submit"
+  disabled={loading}
+  className={`w-full py-2 rounded-md font-semibold text-white transition ${
+    loading ? 'bg-blue-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-500'
+  }`}
+>
+  {loading ? 'Signing Up...' : 'Sign Up'}
+</button>
+
 
     <p className="text-center text-sm text-blue-300 mt-6">
         Already have an account?{" "}

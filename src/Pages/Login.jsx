@@ -107,22 +107,26 @@ import { FaEnvelope, FaLock } from "react-icons/fa";
 export default function Login() {
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   function submit(e) {
     e.preventDefault();
     console.log(email, password);
+         setLoading(true); 
 
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
         console.log(user);
+        alert("Login sucessfully ")
         console.log( "user uid =====>" ,  user.uid);
-        
         navigate("/Home");
+         setLoading(false); 
       })
       .catch((error) => {
         console.log(error.message);
+        alert("please correct email or passward !")
       });
   }
 
@@ -176,11 +180,14 @@ export default function Login() {
 
           {/* Submit */}
           <button
-            type="submit"
-            className="w-full py-2 bg-blue-600 hover:bg-blue-500 transition rounded-md text-white font-semibold"
-          >
-            Login Account
-          </button>
+  type="submit"
+  disabled={loading}
+  className={`w-full py-2 rounded-md font-semibold text-white transition ${
+    loading ? 'bg-blue-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-500'
+  }`}
+>
+  {loading ? 'Loging  Account...' : 'Loging Account '}
+</button>
 
           <p className="text-center text-sm text-blue-300 mt-6">
             Don’t have an account?{" "}
